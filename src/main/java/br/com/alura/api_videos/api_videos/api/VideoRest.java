@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,13 +46,13 @@ public class VideoRest {
 
     // read video by id
     @GetMapping("/{id}")
-    private ResponseEntity<VideoDto> getVideoById(@PathVariable Long id){
+    private ResponseEntity<?> getVideoById(@PathVariable Long id){
         Optional<Video> video = videoService.findById(id);
         if (video.isPresent()) {
             return ResponseEntity.ok(new VideoDto(video.get()) );
         }
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
 
     // delete video
@@ -60,9 +61,9 @@ public class VideoRest {
         Optional<Video> video = videoService.findById(id);
         if (video.isPresent()) {
             videoService.deleteById(id);
-            return ResponseEntity.ok("DELETADO");
+            return ResponseEntity.ok("Deletado");
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
 
     // create video
@@ -76,13 +77,13 @@ public class VideoRest {
 
     // update video by id
     @PutMapping("/{id}")
-    private ResponseEntity<VideoDto> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
+    private ResponseEntity<?> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
         Video video = form.updateVideo(id, videoService);        
         if (video != null) {
             videoService.saveVideo(video);
             return ResponseEntity.ok(new VideoDto(video));
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
         
     }
 

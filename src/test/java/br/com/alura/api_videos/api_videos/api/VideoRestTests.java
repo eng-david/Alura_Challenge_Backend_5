@@ -49,7 +49,8 @@ public class VideoRestTests {
         URI uri = new URI("/videos/6");
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Não encontrado"));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class VideoRestTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(uri))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("DELETADO"));
+                .andExpect(MockMvcResultMatchers.content().string("Deletado"));
     }
 
     @Test
@@ -68,11 +69,46 @@ public class VideoRestTests {
         URI uri = new URI("/videos/1");
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(uri))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Não encontrado"));
     }
 
     @Test
     @Order(6)
+    public void putVideoAndReceive200Ok() throws Exception {
+        URI uri = new URI("/videos/2");
+        Map<String, String> video = new HashMap<>();
+        video.put("titulo", "titulo put test");
+
+        String json = convertMapToString(video);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put(uri)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("{'titulo':'titulo put test'}"));
+    }
+
+    @Test
+    @Order(7)
+    public void putVideoAndReceiveNotFound() throws Exception {
+        URI uri = new URI("/videos/6");
+        Map<String, String> video = new HashMap<>();
+        video.put("titulo", "titulo put test");
+
+        String json = convertMapToString(video);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .put(uri)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Não encontrado"));
+    }
+
+    @Test
+    @Order(8)
     public void postVideoAndReceive201Created() throws Exception {
         URI uri = new URI("/videos");
         Map<String, String> video = new HashMap<>();
@@ -88,23 +124,6 @@ public class VideoRestTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("{'titulo':'titulo test'}"));
-    }
-
-    @Test
-    @Order(7)
-    public void putVideoAndReceive200Ok() throws Exception {
-        URI uri = new URI("/videos/2");
-        Map<String, String> video = new HashMap<>();
-        video.put("titulo", "titulo put test");
-
-        String json = convertMapToString(video);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .put(uri)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("{'titulo':'titulo put test'}"));
     }
 
     private String convertMapToString(Map<String, String> map) {
