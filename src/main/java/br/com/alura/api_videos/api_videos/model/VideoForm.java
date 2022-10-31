@@ -4,11 +4,9 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.URL;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-@AllArgsConstructor
+@Data
 public class VideoForm {
 
     @NotBlank
@@ -18,11 +16,4 @@ public class VideoForm {
     @NotBlank @URL
     private String url;
 
-    public Video toVideo(){
-        Video video = new Video();
-        video.setTitulo(this.titulo);
-        video.setDescricao(this.descricao);
-        video.setUrl(this.url);
-        return video;
-    }
 }

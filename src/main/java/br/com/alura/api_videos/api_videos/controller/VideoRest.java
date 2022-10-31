@@ -1,4 +1,4 @@
-package br.com.alura.api_videos.api_videos.api;
+package br.com.alura.api_videos.api_videos.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -35,11 +35,9 @@ public class VideoRest {
     // read all videos
     @GetMapping
     private ResponseEntity<List<VideoDto>> getVideos(){
-        List<Video> videos = videoService.getAllVideos();
-    
+        List<Video> videos = videoService.findAllVideos();
         if (videos.size() > 0){
-            List<VideoDto> videosDto = VideoDto.toDto(videos);
-            return ResponseEntity.ok(videosDto);
+            return ResponseEntity.ok(videoService.toListDto(videos));
         }
         return ResponseEntity.noContent().build();
     }    
@@ -47,9 +45,9 @@ public class VideoRest {
     // read video by id
     @GetMapping("/{id}")
     private ResponseEntity<?> getVideoById(@PathVariable Long id){
-        Optional<Video> video = videoService.findById(id);
+        Optional<Video> video = videoService.findVideoById(id);
         if (video.isPresent()) {
-            return ResponseEntity.ok(new VideoDto(video.get()) );
+            return ResponseEntity.ok(videoService.toDto(video.get()) );
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
@@ -58,9 +56,9 @@ public class VideoRest {
     // delete video
     @DeleteMapping("/{id}")
     private ResponseEntity<String> deleteVideoById(@PathVariable Long id) {
-        Optional<Video> video = videoService.findById(id);
+        Optional<Video> video = videoService.findVideoById(id);
         if (video.isPresent()) {
-            videoService.deleteById(id);
+            videoService.deleteVideoById(id);
             return ResponseEntity.ok("Deletado");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
@@ -69,19 +67,18 @@ public class VideoRest {
     // create video
     @PostMapping
     private ResponseEntity<VideoDto> createVideo(@RequestBody @Valid VideoForm form, UriComponentsBuilder uriBuilder) {
-        Video video = form.toVideo();
+        Video video = videoService.toVideo(form);
         videoService.saveVideo(video);
         URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
-        return ResponseEntity.created(uri).body(new VideoDto(video));
+        return ResponseEntity.created(uri).body(videoService.toDto(video));
     }
 
     // update video by id
     @PutMapping("/{id}")
     private ResponseEntity<?> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
-        Video video = form.updateVideo(id, videoService);        
+        Video video = videoService.updateVideo(id, form);        
         if (video != null) {
-            videoService.saveVideo(video);
-            return ResponseEntity.ok(new VideoDto(video));
+            return ResponseEntity.ok(videoService.toDto(video));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
         

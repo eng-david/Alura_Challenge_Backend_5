@@ -3,12 +3,28 @@ package br.com.alura.api_videos.api_videos.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import br.com.alura.api_videos.api_videos.model.Video;
+import br.com.alura.api_videos.api_videos.model.VideoDto;
+import br.com.alura.api_videos.api_videos.model.VideoForm;
+import br.com.alura.api_videos.api_videos.model.VideoPutForm;
 
 public interface VideoService {
-    Video getVideo(Long id);
-    List<Video> getAllVideos();
+    List<Video> findAllVideos();
+
+    Optional<Video> findVideoById(Long id);
+
     Video saveVideo(Video video);
-    Optional<Video> findById(Long id);
-    void deleteById(Long id);
+
+    void deleteVideoById(Long id);
+
+    List<VideoDto> toListDto(List<Video> videos);
+
+    VideoDto toDto(Video video);
+
+    Video toVideo(@Valid VideoForm form);
+
+    Video updateVideo(Long id, VideoPutForm form);
+
 }

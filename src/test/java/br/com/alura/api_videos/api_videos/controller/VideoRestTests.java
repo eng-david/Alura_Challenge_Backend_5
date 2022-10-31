@@ -1,4 +1,4 @@
-package br.com.alura.api_videos.api_videos.api;
+package br.com.alura.api_videos.api_videos.controller;
 
 import java.net.URI;
 import java.util.HashMap;

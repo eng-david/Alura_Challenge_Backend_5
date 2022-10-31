@@ -1,4 +1,6 @@
 # ALURA CHALLENGE BACKEND #5
+<p align='center'><img src='assets/logo.png' width=240 alt='logo'/></p>
+
 API REST desenvolvida durante o challenge#05 de backend da Alura.
 
 Esta API implementa as seguintes especificações:

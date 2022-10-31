@@ -5,11 +5,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class VideoDto {
+public class CategoriaDto {
 
     private Long id;
     private String titulo;
-    private String descricao;
-    private String url;
+    private String cor;
 
 }
