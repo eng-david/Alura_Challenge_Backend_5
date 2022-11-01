@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.alura.api_videos.api_videos.dto.CategoriaDto;
+import br.com.alura.api_videos.api_videos.dto.CategoriaForm;
+import br.com.alura.api_videos.api_videos.dto.CategoriaPutForm;
 import br.com.alura.api_videos.api_videos.model.Categoria;
-import br.com.alura.api_videos.api_videos.model.CategoriaDto;
 import br.com.alura.api_videos.api_videos.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +59,25 @@ public class CategoriaServiceImp implements CategoriaService {
 
     @Override
     public CategoriaDto toDto(Categoria categoria) {
+        log.info("Generating categoria Dto");
         return new CategoriaDto(categoria.getId(), categoria.getTitulo(), categoria.getCor());
+    }
+
+    @Override
+    public Categoria toCategoria(CategoriaForm form) {
+        return new Categoria(null, form.getTitulo(), form.getCor(), null);
+    }
+
+    @Override
+    public Categoria updateCategoria(Long id, CategoriaPutForm form) {
+        Optional<Categoria> categoria = findCategoriaById(id);
+        if (categoria.isPresent()) {
+            if (form.getTitulo() != null) categoria.get().setTitulo(form.getTitulo());
+            if (form.getCor() != null) categoria.get().setCor(form.getCor());
+            saveCategoria(categoria.get());
+            return categoria.get();
+        }
+        return null;
     }
     
 }

@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.alura.api_videos.api_videos.dto.VideoDto;
+import br.com.alura.api_videos.api_videos.dto.VideoForm;
+import br.com.alura.api_videos.api_videos.dto.VideoPutForm;
 import br.com.alura.api_videos.api_videos.model.Video;
-import br.com.alura.api_videos.api_videos.model.VideoDto;
-import br.com.alura.api_videos.api_videos.model.VideoForm;
-import br.com.alura.api_videos.api_videos.model.VideoPutForm;
 import br.com.alura.api_videos.api_videos.service.VideoService;
 import lombok.RequiredArgsConstructor;
 
@@ -52,7 +52,27 @@ public class VideoRest {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
-
+    
+    // create video
+    @PostMapping
+    private ResponseEntity<VideoDto> createVideo(@RequestBody @Valid VideoForm form, UriComponentsBuilder uriBuilder) {
+        Video video = videoService.toVideo(form);
+        videoService.saveVideo(video);
+        URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
+        return ResponseEntity.created(uri).body(videoService.toDto(video));
+    }
+    
+    // update video by id
+    @PutMapping("/{id}")
+    private ResponseEntity<?> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
+        Video video = videoService.updateVideo(id, form);        
+        if (video != null) {
+            return ResponseEntity.ok(videoService.toDto(video));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+        
+    }
+    
     // delete video
     @DeleteMapping("/{id}")
     private ResponseEntity<String> deleteVideoById(@PathVariable Long id) {
@@ -64,24 +84,13 @@ public class VideoRest {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
 
-    // create video
-    @PostMapping
-    private ResponseEntity<VideoDto> createVideo(@RequestBody @Valid VideoForm form, UriComponentsBuilder uriBuilder) {
-        Video video = videoService.toVideo(form);
-        videoService.saveVideo(video);
-        URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
-        return ResponseEntity.created(uri).body(videoService.toDto(video));
-    }
-
-    // update video by id
-    @PutMapping("/{id}")
-    private ResponseEntity<?> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
-        Video video = videoService.updateVideo(id, form);        
-        if (video != null) {
-            return ResponseEntity.ok(videoService.toDto(video));
+    // search video by name
+    @GetMapping("/")
+    public ResponseEntity<?> searchVideosByTitulo(String search){
+        List<Video> videos = videoService.findByTitulo(search);
+        if(videos.size() > 0) {
+            return ResponseEntity.ok(videoService.toListDto(videos));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
-        
     }
-
 }

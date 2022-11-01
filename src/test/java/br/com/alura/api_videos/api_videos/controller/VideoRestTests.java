@@ -3,7 +3,6 @@ package br.com.alura.api_videos.api_videos.controller;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -16,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import br.com.alura.api_videos.api_videos.TestTools;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -80,7 +81,7 @@ public class VideoRestTests {
         Map<String, String> video = new HashMap<>();
         video.put("titulo", "titulo put test");
 
-        String json = convertMapToString(video);
+        String json = TestTools.convertMapToString(video);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put(uri)
@@ -97,7 +98,7 @@ public class VideoRestTests {
         Map<String, String> video = new HashMap<>();
         video.put("titulo", "titulo put test");
 
-        String json = convertMapToString(video);
+        String json = TestTools.convertMapToString(video);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .put(uri)
@@ -116,7 +117,7 @@ public class VideoRestTests {
         video.put("descricao", "descricao test");
         video.put("url", "http://www.testing.com");
 
-        String json = convertMapToString(video);
+        String json = TestTools.convertMapToString(video);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post(uri)
@@ -124,12 +125,6 @@ public class VideoRestTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("{'titulo':'titulo test'}"));
-    }
-
-    private String convertMapToString(Map<String, String> map) {
-        return map.keySet().stream()
-                .map(key -> "\"" + key + "\":\"" + map.get(key) + "\"")
-                .collect(Collectors.joining(",", "{", "}"));
     }
 
 }

@@ -3,12 +3,10 @@ package br.com.alura.api_videos.api_videos.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
+import br.com.alura.api_videos.api_videos.dto.VideoDto;
+import br.com.alura.api_videos.api_videos.dto.VideoForm;
+import br.com.alura.api_videos.api_videos.dto.VideoPutForm;
 import br.com.alura.api_videos.api_videos.model.Video;
-import br.com.alura.api_videos.api_videos.model.VideoDto;
-import br.com.alura.api_videos.api_videos.model.VideoForm;
-import br.com.alura.api_videos.api_videos.model.VideoPutForm;
 
 public interface VideoService {
     List<Video> findAllVideos();
@@ -23,8 +21,12 @@ public interface VideoService {
 
     VideoDto toDto(Video video);
 
-    Video toVideo(@Valid VideoForm form);
+    Video toVideo(VideoForm form);
 
     Video updateVideo(Long id, VideoPutForm form);
+
+    List<Video> findAllVideosByCategoriaId(Long id);
+
+    List<Video> findByTitulo(String search);
 
 }
