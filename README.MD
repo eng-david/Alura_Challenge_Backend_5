@@ -8,11 +8,11 @@ Esta API implementa as seguintes especificações:
 2. Validações feitas conforme as regras de negócio.
 3. Base de dados para persistência das informações.
 
-## Regras de Negócio
+## Regras de Negócio:
 1. Todos os campos de vídeos e categorias devem ser obrigatórios e validados.
 2. A categoria com ID = 1, deve chamar LIVRE e caso ela não seja especificada na criação do vídeo, será atribuído o ID = 1.
 
-## Rotas CRUD
+## Rotas CRUD:
 
 <table>
     <tr>
@@ -108,17 +108,20 @@ Esta API implementa as seguintes especificações:
     </tr>
 </table>
 
+## Demo:
+<p align='center'><img src='assets/screenshot.png' alt='screenshot'/></p>
 
-## Tecnologias Utilizadas
+
+## Tecnologias Utilizadas:
 - `Linguagem Java`
 - `Framework Spring Boot`
 - `Maven`
 - `Banco de Dados MySQL`
 
-## Pendentes Semana 1
+## Pendentes Semana 1:
 - [X] Testes para verificar Status code das requisições GET, POST, PUT e DELETE
 
-## Pendentes Semana 2
+## Pendentes Semana 2:
 - [X] Adicionar categorias e seus campos na base de dados;
 - [X] Rotas CRUD para /categorias;
 - [X] Incluir campo categoriaId no modelo video;
