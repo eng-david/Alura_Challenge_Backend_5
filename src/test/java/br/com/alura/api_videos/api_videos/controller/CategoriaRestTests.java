@@ -47,7 +47,7 @@ public class CategoriaRestTests {
     @Test
     @Order(3)
     public void getNonExistentCategoriaAndReceiveNotFound() throws Exception {
-        URI uri = new URI("/categorias/8");
+        URI uri = new URI("/categorias/9");
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -57,7 +57,7 @@ public class CategoriaRestTests {
     @Test
     @Order(4)
     public void deleteOneCategoriaAndReceive200Ok() throws Exception {
-        URI uri = new URI("/categorias/1");
+        URI uri = new URI("/categorias/2");
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(uri))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -67,7 +67,7 @@ public class CategoriaRestTests {
     @Test
     @Order(5)
     public void deleteInexistentCategoriaAndReceiveNotFound() throws Exception {
-        URI uri = new URI("/categorias/1");
+        URI uri = new URI("/categorias/2");
         mockMvc.perform(MockMvcRequestBuilders
                 .delete(uri))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -77,7 +77,7 @@ public class CategoriaRestTests {
     @Test
     @Order(6)
     public void putCategoriaAndReceive200Ok() throws Exception {
-        URI uri = new URI("/categorias/2");
+        URI uri = new URI("/categorias/3");
 
         Map<String, String> categoria = new HashMap<>();
         categoria.put("titulo", "titulo put test");
@@ -94,7 +94,7 @@ public class CategoriaRestTests {
     @Test
     @Order(7)
     public void putInexistentCategoriaAndReceiveNotFound() throws Exception {
-        URI uri = new URI("/categorias/8");
+        URI uri = new URI("/categorias/9");
 
         Map<String, String> categoria = new HashMap<>();
         categoria.put("titulo", "titulo put test");
