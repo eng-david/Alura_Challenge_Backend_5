@@ -65,7 +65,7 @@ public class VideoServiceImp implements VideoService {
     public VideoDto toDto(Video video) {
         log.info("Generating video Dto");
         return new VideoDto(video.getId(), video.getTitulo(), video.getDescricao(), video.getUrl(),
-                categoriaService.toDto(video.getCategoria()));
+                video.getCategoria().getId());
     }
 
     @Override
