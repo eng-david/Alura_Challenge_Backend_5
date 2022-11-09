@@ -1,15 +1,15 @@
 package br.com.alura.api_videos.api_videos.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.alura.api_videos.api_videos.model.Video;
 
 public interface VideoRepository extends JpaRepository<Video, Long> {
 
-    List<Video> findByCategoriaId(Long id);
+    Page<Video> findByCategoriaId(Pageable pageable, Long id);
 
-    List<Video> findByTituloContainingIgnoreCase(String search);
+    Page<Video> findByTituloContainingIgnoreCase(Pageable pageable, String search);
         
 }

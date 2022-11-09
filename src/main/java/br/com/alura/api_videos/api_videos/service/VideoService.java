@@ -1,7 +1,9 @@
 package br.com.alura.api_videos.api_videos.service;
 
-import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.alura.api_videos.api_videos.dto.VideoDto;
 import br.com.alura.api_videos.api_videos.dto.VideoForm;
@@ -9,7 +11,7 @@ import br.com.alura.api_videos.api_videos.dto.VideoPutForm;
 import br.com.alura.api_videos.api_videos.model.Video;
 
 public interface VideoService {
-    List<Video> findAllVideos();
+    Page<Video> findAllVideos(Pageable pageable);
 
     Optional<Video> findVideoById(Long id);
 
@@ -17,7 +19,7 @@ public interface VideoService {
 
     void deleteVideoById(Long id);
 
-    List<VideoDto> toListDto(List<Video> videos);
+    Page<VideoDto> toListDto(Page<Video> videos);
 
     VideoDto toDto(Video video);
 
@@ -25,8 +27,8 @@ public interface VideoService {
 
     Video updateVideo(Long id, VideoPutForm form);
 
-    List<Video> findAllVideosByCategoriaId(Long id);
+    Page<Video> findAllVideosByCategoriaId(Pageable pageable, Long id);
 
-    List<Video> findByTitulo(String search);
+    Page<Video> findByTitulo(Pageable pageable, String search);
 
 }

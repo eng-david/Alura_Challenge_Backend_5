@@ -1,11 +1,13 @@
 package br.com.alura.api_videos.api_videos.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +24,7 @@ import br.com.alura.api_videos.api_videos.dto.VideoDto;
 import br.com.alura.api_videos.api_videos.dto.VideoForm;
 import br.com.alura.api_videos.api_videos.dto.VideoPutForm;
 import br.com.alura.api_videos.api_videos.model.Video;
-import br.com.alura.api_videos.api_videos.service.VideoService;
+import br.com.alura.api_videos.api_videos.service.VideoServiceImp;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,13 +32,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class VideoRest {
 
-    private final VideoService videoService;
+    private final VideoServiceImp videoService;
 
     // read all videos
     @GetMapping
-    private ResponseEntity<List<VideoDto>> getVideos(){
-        List<Video> videos = videoService.findAllVideos();
-        if (videos.size() > 0){
+    private ResponseEntity<Page<VideoDto>> getVideos(@PageableDefault(size = 5) Pageable pageable){
+        Page<Video> videos = videoService.findAllVideos(pageable);
+        if (videos.getTotalElements() > 0){
             return ResponseEntity.ok(videoService.toListDto(videos));
         }
         return ResponseEntity.noContent().build();
@@ -86,9 +88,9 @@ public class VideoRest {
 
     // search video by name
     @GetMapping("/")
-    public ResponseEntity<?> searchVideosByTitulo(String search){
-        List<Video> videos = videoService.findByTitulo(search);
-        if(videos.size() > 0) {
+    public ResponseEntity<?> searchVideosByTitulo(@PageableDefault(size = 5) Pageable pageable, String search){
+        Page<Video> videos = videoService.findByTitulo(pageable, search);
+        if(videos.getTotalElements() > 0) {
             return ResponseEntity.ok(videoService.toListDto(videos));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");

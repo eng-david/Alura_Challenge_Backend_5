@@ -1,7 +1,9 @@
 package br.com.alura.api_videos.api_videos.service;
 
-import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.alura.api_videos.api_videos.dto.CategoriaDto;
 import br.com.alura.api_videos.api_videos.dto.CategoriaForm;
@@ -9,7 +11,7 @@ import br.com.alura.api_videos.api_videos.dto.CategoriaPutForm;
 import br.com.alura.api_videos.api_videos.model.Categoria;
 
 public interface CategoriaService {
-    List<Categoria> findAllCategorias();
+    Page<Categoria> findAllCategorias(Pageable pageable);
 
     Optional<Categoria> findCategoriaById(Long id);
 
@@ -17,7 +19,7 @@ public interface CategoriaService {
 
     void deleteCategoriaById(Long id);
 
-    List<CategoriaDto> toListDto(List<Categoria> categorias);
+    Page<CategoriaDto> toListDto(Page<Categoria> categorias);
 
     CategoriaDto toDto(Categoria categoria);
 

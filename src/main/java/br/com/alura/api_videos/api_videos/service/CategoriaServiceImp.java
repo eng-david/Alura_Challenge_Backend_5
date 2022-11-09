@@ -1,9 +1,9 @@
 package br.com.alura.api_videos.api_videos.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +30,9 @@ public class CategoriaServiceImp implements CategoriaService {
     }
 
     @Override
-    public List<Categoria> findAllCategorias() {
+    public Page<Categoria> findAllCategorias(Pageable pageable) {
         log.info("Fetching all categorias");
-        return categoriaRepository.findAll();
+        return categoriaRepository.findAll(pageable);
     }
 
     @Override
@@ -45,16 +45,12 @@ public class CategoriaServiceImp implements CategoriaService {
     @Override
     public void deleteCategoriaById(Long id) {
         log.info("Deleting categoria");
-        categoriaRepository.deleteById(id);        
+        categoriaRepository.deleteById(id);
     }
 
     @Override
-    public List<CategoriaDto> toListDto(List<Categoria> categorias) {
-        List<CategoriaDto> categoriasDto = new ArrayList<>();
-        categorias.forEach(c -> {
-            categoriasDto.add(toDto(c));
-        });
-        return categoriasDto;
+    public Page<CategoriaDto> toListDto(Page<Categoria> categorias) {
+        return categorias.map(CategoriaDto::new);
     }
 
     @Override
@@ -72,12 +68,14 @@ public class CategoriaServiceImp implements CategoriaService {
     public Categoria updateCategoria(Long id, CategoriaPutForm form) {
         Optional<Categoria> categoria = findCategoriaById(id);
         if (categoria.isPresent()) {
-            if (form.getTitulo() != null) categoria.get().setTitulo(form.getTitulo());
-            if (form.getCor() != null) categoria.get().setCor(form.getCor());
+            if (form.getTitulo() != null)
+                categoria.get().setTitulo(form.getTitulo());
+            if (form.getCor() != null)
+                categoria.get().setCor(form.getCor());
             saveCategoria(categoria.get());
             return categoria.get();
         }
         return null;
     }
-    
+
 }

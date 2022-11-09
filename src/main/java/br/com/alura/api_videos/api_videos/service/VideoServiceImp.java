@@ -1,9 +1,9 @@
 package br.com.alura.api_videos.api_videos.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +26,9 @@ public class VideoServiceImp implements VideoService {
     private final CategoriaService categoriaService;
 
     @Override
-    public List<Video> findAllVideos() {
+    public Page<Video> findAllVideos(Pageable pageable) {
         log.info("Fetching all videos");
-        return videoRepository.findAll();
+        return videoRepository.findAll(pageable);
     }
 
     @Override
@@ -51,14 +51,8 @@ public class VideoServiceImp implements VideoService {
     }
 
     @Override
-    public List<VideoDto> toListDto(List<Video> videos) {
-
-        List<VideoDto> videosDto = new ArrayList<>();
-        videos.forEach(v -> {
-            videosDto.add(toDto(v));
-        });
-        return videosDto;
-        // return videos.stream().map(VideoDto::new).collect(Collectors.toList());
+    public Page<VideoDto> toListDto(Page<Video> videos) {
+        return videos.map(VideoDto::new);
     }
 
     @Override
@@ -101,14 +95,14 @@ public class VideoServiceImp implements VideoService {
     }
 
     @Override
-    public List<Video> findAllVideosByCategoriaId(Long id) {
+    public Page<Video> findAllVideosByCategoriaId(Pageable pageable, Long id) {
         log.info("Fetching video by categoria id {}", id);
-        return videoRepository.findByCategoriaId(id);
+        return videoRepository.findByCategoriaId(pageable, id);
     }
 
     @Override
-    public List<Video> findByTitulo(String search) {
-        return videoRepository.findByTituloContainingIgnoreCase(search);
+    public Page<Video> findByTitulo(Pageable pageable, String search) {
+        return videoRepository.findByTituloContainingIgnoreCase(pageable, search);
     }
 
 }
