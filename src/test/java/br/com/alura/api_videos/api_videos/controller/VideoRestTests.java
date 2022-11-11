@@ -98,6 +98,15 @@ public class VideoRestTests {
 
     @Test
     @Order(6)
+    public void getFreeVideosWithoutAuthorizationAndReceive200Ok() throws Exception {
+        URI uri = new URI("/videos/free");
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @Order(7)
     public void deleteOneVideoAndReceiveForbidden() throws Exception {
         URI uri = new URI("/videos/1");
         mockMvc.perform(MockMvcRequestBuilders
@@ -118,7 +127,7 @@ public class VideoRestTests {
     // }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void putVideoAndReceiveForbidden() throws Exception {
         URI uri = new URI("/videos/2");
         Map<String, String> video = new HashMap<>();
@@ -153,7 +162,7 @@ public class VideoRestTests {
     // }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void postVideoAndReceiveForbidden() throws Exception {
         URI uri = new URI("/videos");
         Map<String, String> video = new HashMap<>();
@@ -171,7 +180,7 @@ public class VideoRestTests {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void postVideoAndReceive201Created() throws Exception {
         URI uri = new URI("/videos");
         Map<String, String> video = new HashMap<>();

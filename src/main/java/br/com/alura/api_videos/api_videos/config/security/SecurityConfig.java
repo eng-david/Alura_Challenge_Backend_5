@@ -42,6 +42,7 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/videos/free").permitAll()
                 .antMatchers(HttpMethod.GET, "/categorias/**").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/categorias/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/videos/**").hasRole("USER")

@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -36,25 +37,46 @@ public class VideoRest {
 
     // read all videos
     @GetMapping
-    private ResponseEntity<Page<VideoDto>> getVideos(@PageableDefault(size = 5) Pageable pageable){
+    private ResponseEntity<Page<VideoDto>> getVideos(@PageableDefault(size = 5) Pageable pageable) {
         Page<Video> videos = videoService.findAllVideos(pageable);
-        if (videos.getTotalElements() > 0){
+        if (videos.getTotalElements() > 0) {
             return ResponseEntity.ok(videoService.toListDto(videos));
         }
         return ResponseEntity.noContent().build();
-    }    
+    }
 
     // read video by id
     @GetMapping("/{id}")
-    private ResponseEntity<?> getVideoById(@PathVariable Long id){
+    private ResponseEntity<?> getVideoById(@PathVariable Long id) {
         Optional<Video> video = videoService.findVideoById(id);
         if (video.isPresent()) {
-            return ResponseEntity.ok(videoService.toDto(video.get()) );
+            return ResponseEntity.ok(videoService.toDto(video.get()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
-    
+
+    // search video by name
+    @GetMapping("/")
+    public ResponseEntity<?> searchVideosByTitulo(@PageableDefault(size = 5) Pageable pageable, String search) {
+        Page<Video> videos = videoService.findByTitulo(pageable, search);
+        if (videos.getTotalElements() > 0) {
+            return ResponseEntity.ok(videoService.toListDto(videos));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+    }
+
+    // read free videos
+    @GetMapping("/free")
+    private ResponseEntity<?> getFreeVideos() {
+        Pageable pageable = PageRequest.of(0, 3);
+        Page<Video> freeVideos = videoService.findAllVideos(pageable);
+        if (freeVideos.getTotalElements() > 0) {
+            return ResponseEntity.ok(videoService.toListDto(freeVideos));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
+    }
+
     // create video
     @PostMapping
     private ResponseEntity<VideoDto> createVideo(@RequestBody @Valid VideoForm form, UriComponentsBuilder uriBuilder) {
@@ -63,18 +85,18 @@ public class VideoRest {
         URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
         return ResponseEntity.created(uri).body(videoService.toDto(video));
     }
-    
+
     // update video by id
     @PutMapping("/{id}")
     private ResponseEntity<?> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
-        Video video = videoService.updateVideo(id, form);        
+        Video video = videoService.updateVideo(id, form);
         if (video != null) {
             return ResponseEntity.ok(videoService.toDto(video));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
-        
+
     }
-    
+
     // delete video
     @DeleteMapping("/{id}")
     private ResponseEntity<String> deleteVideoById(@PathVariable Long id) {
@@ -86,13 +108,4 @@ public class VideoRest {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
 
-    // search video by name
-    @GetMapping("/")
-    public ResponseEntity<?> searchVideosByTitulo(@PageableDefault(size = 5) Pageable pageable, String search){
-        Page<Video> videos = videoService.findByTitulo(pageable, search);
-        if(videos.getTotalElements() > 0) {
-            return ResponseEntity.ok(videoService.toListDto(videos));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
-    }
 }
