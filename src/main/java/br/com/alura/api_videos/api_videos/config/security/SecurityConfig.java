@@ -7,9 +7,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import br.com.alura.api_videos.api_videos.filter.AuthenticationFilter;
@@ -21,10 +21,11 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     private final AppUserServiceImp userService;
     private final AuthTokenService tokenService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Value("${jwt.expiration}")
     private String expirationDelay;
@@ -32,32 +33,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Override
     @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
-    }
+        AuthenticationManager authenticationManager = authenticationManager(http);
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf().disable()
                 .authorizeRequests()
                 // .antMatchers("/auth").permitAll()
-                .antMatchers("/users").hasRole("ADMIN")
+                .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers("/categorias").hasRole("USER")
                 .antMatchers("/videos").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilter(new CustomAuthenticationFilter(authenticationManager(), tokenService))
+                .and().addFilter(new CustomAuthenticationFilter(authenticationManager, tokenService))
                 .addFilterBefore(new AuthenticationFilter(tokenService, userService),
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class)
+                .authenticationManager(authenticationManager)
+                .build();
 
+    }
+
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder);
+        return authenticationManagerBuilder.build();
     }
 
 }
