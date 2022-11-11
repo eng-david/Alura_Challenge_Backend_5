@@ -3,6 +3,7 @@ package br.com.alura.api_videos.api_videos.config.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,9 +43,11 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
                 // .antMatchers("/auth").permitAll()
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/categorias").hasRole("USER")
-                .antMatchers("/videos").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/categorias/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/categorias/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/videos/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/videos/**").hasRole("USER")
+                .antMatchers("/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilter(new CustomAuthenticationFilter(authenticationManager, tokenService))
