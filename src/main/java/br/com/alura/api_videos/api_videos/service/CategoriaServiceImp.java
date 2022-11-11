@@ -56,7 +56,7 @@ public class CategoriaServiceImp implements CategoriaService {
     @Override
     public CategoriaDto toDto(Categoria categoria) {
         log.info("Generating categoria Dto");
-        return new CategoriaDto(categoria.getId(), categoria.getTitulo(), categoria.getCor());
+        return new CategoriaDto(categoria);
     }
 
     @Override

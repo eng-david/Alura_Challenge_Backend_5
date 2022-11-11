@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import br.com.alura.api_videos.api_videos.dto.AppUserDto;
 import br.com.alura.api_videos.api_videos.model.AppUser;
 import br.com.alura.api_videos.api_videos.model.Authority;
 
@@ -21,5 +22,9 @@ public interface AppUserService {
     AppUser saveUser(AppUser user);
 
     void addAuthorityToUser(AppUser user, Authority authority);
+
+    AppUserDto toDto(AppUser user);
+
+    Page<AppUserDto> toListDto(Page<AppUser> users);
 
 }

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.alura.api_videos.api_videos.dto.AppUserDto;
 import br.com.alura.api_videos.api_videos.model.AppUser;
 import br.com.alura.api_videos.api_videos.model.Authority;
 import br.com.alura.api_videos.api_videos.repository.AppUserRepository;
@@ -73,6 +74,16 @@ public class AppUserServiceImp implements AppUserService, UserDetailsService {
             return user.get();
 
         throw new UsernameNotFoundException("Invalid Credentials");
+    }
+
+    @Override
+    public AppUserDto toDto(AppUser user) {
+        return new AppUserDto(user);
+    }
+
+    @Override
+    public Page<AppUserDto> toListDto(Page<AppUser> users) {
+        return users.map(AppUserDto::new);
     }
 
 }

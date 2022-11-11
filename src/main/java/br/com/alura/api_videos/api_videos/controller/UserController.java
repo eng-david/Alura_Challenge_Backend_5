@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.alura.api_videos.api_videos.dto.AppUserDto;
 import br.com.alura.api_videos.api_videos.model.AppUser;
 import br.com.alura.api_videos.api_videos.model.Authority;
 import br.com.alura.api_videos.api_videos.service.AppUserServiceImp;
@@ -33,34 +34,35 @@ public class UserController {
     private final AppUserServiceImp userService;
 
     @GetMapping
-    public ResponseEntity<Page<AppUser>> getUsers(Pageable pageable) {
-        return ResponseEntity.ok(userService.findAllUsers(pageable));
+    public ResponseEntity<Page<AppUserDto>> getUsers(Pageable pageable) {
+        Page<AppUser> users = userService.findAllUsers(pageable);
+        return ResponseEntity.ok(userService.toListDto(users));
     }
 
     @GetMapping("/")
     public ResponseEntity<?> getUserByUsername(String username) {
         Optional<AppUser> user = userService.findByUsername(username);
         if (user.isPresent())
-            return ResponseEntity.ok(user.get());
+            return ResponseEntity.ok(userService.toDto(user.get()));
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
 
     @PostMapping
-    public ResponseEntity<AppUser> saveUser(@RequestBody @Valid AppUser user, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<AppUserDto> saveUser(@RequestBody @Valid AppUser user, UriComponentsBuilder uriBuilder) {
         userService.saveUser(user);
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).body(user);
+        return ResponseEntity.created(uri).body(userService.toDto(user));
     }
 
     @PostMapping("/authoritytouser")
-    public ResponseEntity<AppUser> addAuthorityToUser(@RequestBody @Valid AuthorityToUserForm form) {
+    public ResponseEntity<AppUserDto> addAuthorityToUser(@RequestBody @Valid AuthorityToUserForm form) {
         Optional<AppUser> user = userService.findByUsername(form.getUsername());
         Optional<Authority> authority = userService.findAuthority(form.getAuthority());
         if (user.isPresent() & authority.isPresent()) {
             if (!user.get().getAuthorities().contains(authority.get()))
                 user.get().getAuthorities().add(authority.get());
-            return ResponseEntity.ok(user.get());
+            return ResponseEntity.ok(userService.toDto(user.get()));
         } else
             return ResponseEntity.notFound().build();
     }
