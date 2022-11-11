@@ -57,7 +57,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         log.info("successful authentication");
         String token = authTokenService.generateToken(authResult);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        TokenDto tokenDto = new TokenDto("", token);
+        TokenDto tokenDto = new TokenDto("Bearer", token);
         new ObjectMapper().writeValue(response.getOutputStream(), tokenDto);
     }
 

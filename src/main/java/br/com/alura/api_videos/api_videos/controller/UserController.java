@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,12 +38,12 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<AppUser> getUserByUsername(String username) {
+    public ResponseEntity<?> getUserByUsername(String username) {
         Optional<AppUser> user = userService.findByUsername(username);
         if (user.isPresent())
             return ResponseEntity.ok(user.get());
         else
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
 
     @PostMapping
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/authoritytouser")
-    public ResponseEntity<AppUser> addRoleToUser(@RequestBody @Valid AuthorityToUserForm form) {
+    public ResponseEntity<AppUser> addAuthorityToUser(@RequestBody @Valid AuthorityToUserForm form) {
         Optional<AppUser> user = userService.findByUsername(form.getUsername());
         Optional<Authority> authority = userService.findAuthority(form.getAuthority());
         if (user.isPresent() & authority.isPresent()) {
