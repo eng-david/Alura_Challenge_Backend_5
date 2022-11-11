@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.api_videos.api_videos.model.AppUser;
@@ -25,6 +26,7 @@ public class AppUserServiceImp implements AppUserService, UserDetailsService {
 
     private final AppUserRepository userRepository;
     private final AuthorityRepository authorityRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public Page<AppUser> findAllUsers(Pageable pageable) {
@@ -53,6 +55,7 @@ public class AppUserServiceImp implements AppUserService, UserDetailsService {
     @Override
     public AppUser saveUser(AppUser user) {
         log.info("Saving User " + user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

@@ -1,5 +1,6 @@
 package br.com.alura.api_videos.api_videos.config.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import br.com.alura.api_videos.api_videos.filter.AuthenticationFilter;
+import br.com.alura.api_videos.api_videos.filter.CustomAuthenticationFilter;
 import br.com.alura.api_videos.api_videos.service.AppUserServiceImp;
 import br.com.alura.api_videos.api_videos.service.AuthTokenService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AppUserServiceImp userService;
     private final AuthTokenService tokenService;
+
+    @Value("${jwt.expiration}")
+    private String expirationDelay;
+
+    @Value("${jwt.secret}")
+    private String secret;
 
     @Override
     @Bean
@@ -40,13 +48,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth").permitAll()
+                // .antMatchers("/auth").permitAll()
                 .antMatchers("/users").hasRole("ADMIN")
                 .antMatchers("/categorias").hasRole("USER")
                 .antMatchers("/videos").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new AuthenticationFilter(tokenService, userService),
+                .and().addFilter(new CustomAuthenticationFilter(authenticationManager(), tokenService))
+                .addFilterBefore(new AuthenticationFilter(tokenService, userService),
                         UsernamePasswordAuthenticationFilter.class);
 
     }
