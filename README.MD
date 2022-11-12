@@ -1,6 +1,8 @@
 # ALURA CHALLENGE BACKEND #5
+
 <p align='center'><img src='assets/logo.png' width=240 alt='logo'/></p>
 
+## 🚧 Em Desenvolvimento 🚧
 API REST desenvolvida durante o challenge #05 de backend da Alura.
 
 Esta API implementa as seguintes especificações:
@@ -142,8 +144,7 @@ Esta API implementa as seguintes especificações:
 </table>
 
 ## Deploy:
-
-## Demo:
+Foi feito o Deploy da aplicação como um serviço Web na nuvem, utilizando a plataforma Amazon AWS.
 <p align='center'><img src='assets/screenshot.png' alt='screenshot'/></p>
 
 
