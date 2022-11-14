@@ -169,7 +169,7 @@ public class UserControllerTests {
     @Test
     @Order(4)
     public void getOneUserWithAdminAuthAndReceive200Ok() throws Exception {
-        URI uri = new URI("/users/?username=admin");
+        URI uri = new URI("/users/?username=user");
         mockMvc.perform(MockMvcRequestBuilders
                 .get(uri)
                 .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
