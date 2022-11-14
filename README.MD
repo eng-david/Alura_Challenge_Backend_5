@@ -2,7 +2,9 @@
 
 <p align='center'><img src='assets/logo.png' width=240 alt='logo'/></p>
 
-## 🚧 Em Desenvolvimento 🚧
+![In Development Badge](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange)
+
+
 API REST desenvolvida durante o challenge #05 de backend da Alura.
 
 Esta API implementa as seguintes especificações:
@@ -16,7 +18,6 @@ Esta API implementa as seguintes especificações:
 1. Todos os campos de vídeos e categorias devem ser obrigatórios e validados.
 2. A categoria com ID = 1, deve chamar LIVRE e caso ela não seja especificada na criação do vídeo, será atribuído o ID = 1.
 3. Endpoint "GET /videos/free" com um número fixo de filmes disponível, sem a necessidade de autenticação.
-
 
 ## Rotas CRUD:
 
@@ -33,7 +34,7 @@ Esta API implementa as seguintes especificações:
         <td>POST</td>
         <td>/login</td>
         <td>Autentica e retorna o token JWT</td>
-        <td>{"username","password"}</td>
+        <td><pre>{"username":"","password":""}</pre></td>
         <td>-</td>
         <td>Não</td>
     </tr>
@@ -81,7 +82,7 @@ Esta API implementa as seguintes especificações:
         <td>POST</td>
         <td>/videos</td>
         <td>Cria um novo vídeo</td>
-        <td>{"titulo","descricao","url","categoriaId"}</td>
+        <td><pre>{"titulo","descricao","url","categoriaId"}</pre></td>
         <td>-</td>
         <td>Sim [USER]</td>
     </tr>
@@ -89,7 +90,7 @@ Esta API implementa as seguintes especificações:
         <td>PUT</td>
         <td>/videos/{id}</td>
         <td>Atualizar video</td>
-        <td>{"titulo","descricao","url","categoriaId"}</td>
+        <td><pre>{"titulo","descricao","url","categoriaId"}</pre></td>
         <td>video id</td>
         <td>Sim [ADMIN]</td>
     </tr>
@@ -129,7 +130,7 @@ Esta API implementa as seguintes especificações:
         <td>POST</td>
         <td>/categorias</td>
         <td>Cria uma nova categoria</td>
-        <td>{"titulo","cor"}</td>
+        <td><pre>{"titulo","cor"}</pre></td>
         <td>-</td>
         <td>Sim [USER]</td>
     </tr>
@@ -137,7 +138,7 @@ Esta API implementa as seguintes especificações:
         <td>PUT</td>
         <td>/categorias/{id}</td>
         <td>Atualizar categoria</td>
-        <td>{"titulo","cor"}</td>
+        <td><pre>{"titulo","cor"}</pre></td>
         <td>categoria id</td>
         <td>Sim [ADMIN]</td>
     </tr>
