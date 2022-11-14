@@ -13,12 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.alura.api_videos.api_videos.FetchTokens;
 import br.com.alura.api_videos.api_videos.TestTools;
@@ -30,7 +26,6 @@ public class UserControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
-
 
     @Test
     @Order(1)
@@ -50,7 +45,7 @@ public class UserControllerTests {
                 .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
-    
+
     @Test
     @Order(3)
     public void getAllUsersWithAdminAuthAndReceive200Ok() throws Exception {
