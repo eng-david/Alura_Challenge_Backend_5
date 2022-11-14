@@ -167,7 +167,7 @@ Os testes estão implementados em Spring MockMvc para os seguintes cenários:<br
     <tr>
         <td>PUT, DELETE</td>
         <td>rota /videos e /categorias</td>
-        <td>Não Autorizado</td>
+        <td>Privilégio Insuficiente</td>
         <td>403 Forbidden</td>
     </tr>
     <tr>
