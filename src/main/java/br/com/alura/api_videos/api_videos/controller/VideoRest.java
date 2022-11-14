@@ -91,7 +91,7 @@ public class VideoRest {
     private ResponseEntity<?> updateVideoById(@PathVariable Long id, @RequestBody @Valid VideoPutForm form) {
         Video video = videoService.updateVideo(id, form);
         if (video != null) {
-            return ResponseEntity.ok(videoService.toDto(video));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
 
@@ -103,7 +103,7 @@ public class VideoRest {
         Optional<Video> video = videoService.findVideoById(id);
         if (video.isPresent()) {
             videoService.deleteVideoById(id);
-            return ResponseEntity.ok("Deletado");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }

@@ -74,7 +74,7 @@ public class CategoriaRest {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Não permitido");
         Categoria categoria = categoriaService.updateCategoria(id, form);
         if (categoria != null) {
-            return ResponseEntity.ok(categoriaService.toDto(categoria));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
@@ -87,7 +87,7 @@ public class CategoriaRest {
         Optional<Categoria> categoria = categoriaService.findCategoriaById(id);
         if (categoria.isPresent()) {
             categoriaService.deleteCategoriaById(id);
-            return ResponseEntity.ok("Deletado");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não encontrado");
     }
