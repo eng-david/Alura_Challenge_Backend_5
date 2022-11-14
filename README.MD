@@ -2,7 +2,7 @@
 
 <p align='center'><img src='assets/logo.png' width=240 alt='logo'/></p>
 
-![In Development Badge](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange)
+![In Development Badge](https://img.shields.io/badge/Status-Concluido-green)
 
 
 API REST desenvolvida durante o challenge #05 de backend da Alura.
@@ -145,8 +145,9 @@ Esta API implementa as seguintes especificações:
 </table>
 
 ## Deploy:
-Foi feito o Deploy da aplicação como um serviço Web na nuvem, utilizando a plataforma Amazon AWS.
-<p align='center'><img src='assets/screenshot.png' alt='screenshot'/></p>
+Foi feito o Deploy da aplicação como um serviço Web na nuvem, utilizando a plataforma Amazon AWS.<br>
+Disponivel através do ip: 54.234.0.133
+<p align='center'><img src='assets/screenshot2.png' alt='screenshot'/></p>
 
 ## Testes:
 Os testes estão implementados em Spring MockMvc para os seguintes cenários:<br>
