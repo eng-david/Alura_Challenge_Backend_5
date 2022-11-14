@@ -27,6 +27,8 @@ public class UserControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    // --- GET, POST No Authenticated ---
+
     @Test
     @Order(1)
     public void getAllUsersWithNoAuthAndReceiveForbidden() throws Exception {
@@ -37,27 +39,7 @@ public class UserControllerTests {
     }
 
     @Test
-    @Order(2)
-    public void getAllUsersWithUserAuthAndReceiveForbidden() throws Exception {
-        URI uri = new URI("/users");
-        mockMvc.perform(MockMvcRequestBuilders
-                .get(uri)
-                .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
-
-    @Test
-    @Order(3)
-    public void getAllUsersWithAdminAuthAndReceive200Ok() throws Exception {
-        URI uri = new URI("/users");
-        mockMvc.perform(MockMvcRequestBuilders
-                .get(uri)
-                .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @Order(4)
+    @Order(1)
     public void getOneUserWithNoAuthAndReceiveForbidden() throws Exception {
         URI uri = new URI("/users/?username=admin");
         mockMvc.perform(MockMvcRequestBuilders
@@ -66,38 +48,7 @@ public class UserControllerTests {
     }
 
     @Test
-    @Order(4)
-    public void getOneUserWithUserAuthAndReceiveForbidden() throws Exception {
-        URI uri = new URI("/users/?username=admin");
-        mockMvc.perform(MockMvcRequestBuilders
-                .get(uri)
-                .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
-
-    @Test
-    @Order(4)
-    public void getOneUserWithAdminAuthAndReceive200Ok() throws Exception {
-        URI uri = new URI("/users/?username=admin");
-        mockMvc.perform(MockMvcRequestBuilders
-                .get(uri)
-                .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @Order(5)
-    public void getNonExistentUserWithAdminAuthAndReceiveNotFound() throws Exception {
-        URI uri = new URI("/users/?username=notExists");
-        mockMvc.perform(MockMvcRequestBuilders
-                .get(uri)
-                .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.content().string("Não encontrado"));
-    }
-
-    @Test
-    @Order(6)
+    @Order(1)
     public void postUserWithNoAuthAndReceiveForbidden() throws Exception {
         URI uri = new URI("/users");
 
@@ -111,6 +62,45 @@ public class UserControllerTests {
                 .post(uri)
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @Order(1)
+    public void postAuthorityToUserWithNoAuthAndReceiveForbidden() throws Exception {
+        URI uri = new URI("/users/authoritytouser");
+
+        Map<String, String> user = new HashMap<>();
+        user.put("username", "adminTest");
+        user.put("authority", "ROLE_ADMIN");
+        String json = TestTools.convertMapToString(user);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(uri)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+    
+    // --- GET, POST No Authorized
+
+    @Test
+    @Order(2)
+    public void getAllUsersWithUserAuthAndReceiveForbidden() throws Exception {
+        URI uri = new URI("/users");
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @Order(4)
+    public void getOneUserWithUserAuthAndReceiveForbidden() throws Exception {
+        URI uri = new URI("/users/?username=admin");
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -134,6 +124,59 @@ public class UserControllerTests {
     }
 
     @Test
+    @Order(8)
+    public void postAuthorityToUserWithUserAuthAndReceiveForbidden() throws Exception {
+        URI uri = new URI("/users/authoritytouser");
+
+        Map<String, String> user = new HashMap<>();
+        user.put("username", "adminTest");
+        user.put("authority", "ROLE_ADMIN");
+        String json = TestTools.convertMapToString(user);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(uri)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+    
+    // --- GET Inexistent Item ---
+
+    @Test
+    @Order(5)
+    public void getNonExistentUserWithAdminAuthAndReceiveNotFound() throws Exception {
+        URI uri = new URI("/users/?username=notExists");
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Não encontrado"));
+    }
+
+    // --- GET, POST 200 Success Requisition
+
+    @Test
+    @Order(3)
+    public void getAllUsersWithAdminAuthAndReceive200Ok() throws Exception {
+        URI uri = new URI("/users");
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @Order(4)
+    public void getOneUserWithAdminAuthAndReceive200Ok() throws Exception {
+        URI uri = new URI("/users/?username=admin");
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .header("Authorization", ("Bearer " + FetchTokens.getAdminToken(mockMvc))))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
     @Order(7)
     public void postUserWithAdminAuthAndReceive201Created() throws Exception {
         URI uri = new URI("/users");
@@ -152,41 +195,6 @@ public class UserControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().json("{'name':'nameTest'}"))
                 .andExpect(MockMvcResultMatchers.content().json("{'username':'adminTest'}"));
-    }
-
-    @Test
-    @Order(8)
-    public void postAuthorityToUserWithNoAuthAndReceiveForbidden() throws Exception {
-        URI uri = new URI("/users/authoritytouser");
-
-        Map<String, String> user = new HashMap<>();
-        user.put("username", "adminTest");
-        user.put("authority", "ROLE_ADMIN");
-        String json = TestTools.convertMapToString(user);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
-
-    @Test
-    @Order(8)
-    public void postAuthorityToUserWithUserAuthAndReceiveForbidden() throws Exception {
-        URI uri = new URI("/users/authoritytouser");
-
-        Map<String, String> user = new HashMap<>();
-        user.put("username", "adminTest");
-        user.put("authority", "ROLE_ADMIN");
-        String json = TestTools.convertMapToString(user);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(json)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", ("Bearer " + FetchTokens.getUserToken(mockMvc))))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test

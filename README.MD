@@ -71,14 +71,6 @@ Esta API implementa as seguintes especificações:
         <td>Sim [USER]</td>
     </tr>
     <tr>
-        <td>DELETE</td>
-        <td>/videos/{id}</td>
-        <td>Deleta video pelo id</td>
-        <td>-</td>
-        <td>video id</td>
-        <td>Sim [ADMIN]</td>
-    </tr>
-    <tr>
         <td>POST</td>
         <td>/videos</td>
         <td>Cria um novo vídeo</td>
@@ -91,6 +83,14 @@ Esta API implementa as seguintes especificações:
         <td>/videos/{id}</td>
         <td>Atualizar video</td>
         <td><pre>{"titulo","descricao","url","categoriaId"}</pre></td>
+        <td>video id</td>
+        <td>Sim [ADMIN]</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/videos/{id}</td>
+        <td>Deleta video pelo id</td>
+        <td>-</td>
         <td>video id</td>
         <td>Sim [ADMIN]</td>
     </tr>
@@ -119,14 +119,6 @@ Esta API implementa as seguintes especificações:
         <td>Sim [USER]</td>
     </tr>
     <tr>
-        <td>DELETE</td>
-        <td>/categorias/{id}</td>
-        <td>Deleta categoria pelo id</td>
-        <td>-</td>
-        <td>categoria id</td>
-        <td>Sim [ADMIN]</td>
-    </tr>
-    <tr>
         <td>POST</td>
         <td>/categorias</td>
         <td>Cria uma nova categoria</td>
@@ -142,11 +134,73 @@ Esta API implementa as seguintes especificações:
         <td>categoria id</td>
         <td>Sim [ADMIN]</td>
     </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/categorias/{id}</td>
+        <td>Deleta categoria pelo id</td>
+        <td>-</td>
+        <td>categoria id</td>
+        <td>Sim [ADMIN]</td>
+    </tr>
 </table>
 
 ## Deploy:
 Foi feito o Deploy da aplicação como um serviço Web na nuvem, utilizando a plataforma Amazon AWS.
 <p align='center'><img src='assets/screenshot.png' alt='screenshot'/></p>
+
+## Testes:
+Os testes estão implementados em Spring MockMvc para os seguintes cenários:<br>
+
+<table>
+    <tr>
+        <th>Method</th>
+        <th>Descrição</th>
+        <th>Autenticação</th>
+        <th>Status Code</th>
+    </tr>
+    <tr>
+        <td>GET, POST, PUT, DELETE</td>
+        <td>rota /videos e /categorias</td>
+        <td>Não</td>
+        <td>403 Forbidden</td>
+    </tr>
+    <tr>
+        <td>PUT, DELETE</td>
+        <td>rota /videos e /categorias</td>
+        <td>Não Autorizado</td>
+        <td>403 Forbidden</td>
+    </tr>
+    <tr>
+        <td>GET, PUT, DELETE</td>
+        <td>item inexistente</td>
+        <td>Autorizado</td>
+        <td>404 Not Found</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>rota /videos e /categorias</td>
+        <td>Autorizado</td>
+        <td>200 Ok</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>rota /videos/free</td>
+        <td>Não</td>
+        <td>200 Ok</td>
+    </tr>
+    <tr>
+        <td>PUT, DELETE</td>
+        <td>rota /videos  e /categorias</td>
+        <td>Autorizado</td>
+        <td>204 No Content</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>rota /videos e /categorias</td>
+        <td>Autorizado</td>
+        <td>201 Created</td>
+    </tr>
+</table>
 
 
 ## Stack:
