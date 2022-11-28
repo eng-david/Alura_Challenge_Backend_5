@@ -146,7 +146,7 @@ Esta API implementa as seguintes especificações:
 
 ## Deploy:
 Foi feito o Deploy da aplicação como um serviço Web na nuvem, utilizando a plataforma Amazon AWS.<br>
-Disponivel através do ip: 54.234.0.133
+Disponivel através do ip: ~~54.234.0.133~~
 <p align='center'><img src='assets/screenshot2.png' alt='screenshot'/></p>
 
 ## Testes:
